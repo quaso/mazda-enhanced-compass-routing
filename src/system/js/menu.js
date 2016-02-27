@@ -8,81 +8,82 @@ function Menu(menuContainerDiv) {
 }
 
 Menu.prototype = {
-    items : [],
+    items: [],
 
-    menuCurrentIndex : 0,
+    menuCurrentIndex: 0,
 
     // Public methods and variables
-    addItem : function(label, action, closeCurrentMenuAfterSelect, closeAllMenuAfterSelect) {
-	if (!action) {
-	    closeCurrent = false;
-	    closeAll = false;
-	} else {
-	    closeCurrent = typeof (closeCurrentMenuAfterSelect) == "undefined" || closeCurrentMenuAfterSelect;
-	    closeAll = typeof (closeAllMenuAfterSelect) == "undefined" || closeAllMenuAfterSelect;
-	}
-	this.items.push({
-	    action : (action) ? action.bind(__NavPOICtrl) : null, closeCurrentMenuAfterSelect : closeCurrent,
-	    closeAllMenuAfterSelect : closeAll
-	});
+    addItem: function (label, action, closeCurrentMenuAfterSelect, closeAllMenuAfterSelect) {
+        var closeCurrent;
+        var closeAll;
+        if (!action) {
+            closeCurrent = false;
+            closeAll = false;
+        } else {
+            closeCurrent = typeof (closeCurrentMenuAfterSelect) == "undefined" || closeCurrentMenuAfterSelect;
+            closeAll = typeof (closeAllMenuAfterSelect) == "undefined" || closeAllMenuAfterSelect;
+        }
+        this.items.push({
+            action: (action) ? action.bind(__NavPOICtrl) : null, closeCurrentMenuAfterSelect: closeCurrent,
+            closeAllMenuAfterSelect: closeAll
+        });
 
-	var menuItem = document.createElement("div");
-	menuItem.setAttribute("menuIndex", this.items.length - 1);
-	menuItem.classList.add("menuItem");
-	this.menuList.appendChild(menuItem);
+        var menuItem = document.createElement("div");
+        menuItem.setAttribute("menuIndex", this.items.length - 1);
+        menuItem.classList.add("menuItem");
+        this.menuList.appendChild(menuItem);
 
-	var menuItemLabel = document.createElement("span");
-	menuItem.appendChild(menuItemLabel);
+        var menuItemLabel = document.createElement("span");
+        menuItem.appendChild(menuItemLabel);
 
-	menuItemLabel.innerHTML = label;
+        menuItemLabel.innerHTML = label;
     },
 
-    selectNextItem : function() {
-	this.selectMenuItem(this.menuCurrentIndex < this.items.length - 1 ? this.menuCurrentIndex + 1 : 0);
+    selectNextItem: function () {
+        this.selectMenuItem(this.menuCurrentIndex < this.items.length - 1 ? this.menuCurrentIndex + 1 : 0);
     },
 
-    selectPreviousItem : function() {
-	this.selectMenuItem(this.menuCurrentIndex > 0 ? this.menuCurrentIndex - 1 : this.items.length - 1);
+    selectPreviousItem: function () {
+        this.selectMenuItem(this.menuCurrentIndex > 0 ? this.menuCurrentIndex - 1 : this.items.length - 1);
     },
 
-    selectMenuItem : function(index) {
+    selectMenuItem: function (index) {
 
-	// clear
-	var selected = this.menuList.querySelector(".selected");
-	if (selected)
-	    selected.classList.remove("selected");
+        // clear
+        var selected = this.menuList.querySelector(".selected");
+        if (selected)
+            selected.classList.remove("selected");
 
-	var menuItem = this.menuList.querySelector("[menuIndex='" + index + "']");
+        var menuItem = this.menuList.querySelector("[menuIndex='" + index + "']");
 
-	menuItem.classList.add("selected");
+        menuItem.classList.add("selected");
 
-	this.menuCurrentIndex = index;
+        this.menuCurrentIndex = index;
 
-	// adjust scroll height
-	var itemHeight = menuItem.clientHeight, visibleHeight = this.menuContainer.clientHeight, totalHeight = this.menuList.clientHeight, posHeight = (index + 1)
-		* itemHeight, p = Math.max(itemHeight, (posHeight - visibleHeight));
+        // adjust scroll height
+        var itemHeight = menuItem.clientHeight, visibleHeight = this.menuContainer.clientHeight, totalHeight = this.menuList.clientHeight, posHeight = (index + 1)
+            * itemHeight, p = Math.max(itemHeight, (posHeight - visibleHeight));
 
-	if (p % itemHeight > 0)
-	    p = p - (p % itemHeight) + itemHeight;
+        if (p % itemHeight > 0)
+            p = p - (p % itemHeight) + itemHeight;
 
-	// check
-	this.menuList.style.top = (-1 * (posHeight > visibleHeight ? p : 0)) + "px";
+        // check
+        this.menuList.style.top = (-1 * (posHeight > visibleHeight ? p : 0)) + "px";
     },
 
-    executeMenuItemAction : function() {
+    executeMenuItemAction: function () {
+        var item = this.items[this.menuCurrentIndex];
+        if (item) {
+            switch (true) {
 
-	item = this.items[this.menuCurrentIndex];
-	if (item) {
-	    switch (true) {
+                case typeof (item.action) == "function":
+                    item.action.call(this);
+                    break;
+            }
 
-	    case typeof (item.action) == "function":
-		item.action.call(this);
-		break;
-	    }
-
-	    return {
-		currentMenu : item.closeCurrentMenuAfterSelect, allMenu : item.closeAllMenuAfterSelect
-	    }
-	}
+            return {
+                currentMenu: item.closeCurrentMenuAfterSelect, allMenu: item.closeAllMenuAfterSelect
+            }
+        }
     },
 };

@@ -31,7 +31,7 @@ var DestinationHolder = (function() {
 		} else {
 		    var str = localStorage.getItem(localStorageKey);
 		    if (str != null) {
-			storedData = JSON.parse(str);
+			var storedData = JSON.parse(str);
 			if (Date.now() - storedData.timestamp < 60 * 60 * 1000) {
 			    result = storedData;
 			} else {

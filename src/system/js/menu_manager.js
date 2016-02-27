@@ -1,94 +1,94 @@
-var MenuManager = (function() {
+var MenuManager = (function () {
 
     // Instance stores a reference to the Singleton
     var instance;
 
     function init() {
 
-	// Singleton
+        // Singleton
 
-	// Private methods and variables
+        // Private methods and variables
 
-	var menus = [];
+        var menus = [];
 
-	var openMenuHistory = [];
+        var openMenuHistory = [];
 
-	function getActiveMenu() {
-	    return (openMenuHistory.length == 0) ? null : openMenuHistory[openMenuHistory.length - 1].menu;
-	};
+        function getActiveMenu() {
+            return (openMenuHistory.length == 0) ? null : openMenuHistory[openMenuHistory.length - 1].menu;
+        };
 
-	return {
-	    // Public methods and variables
+        return {
+            // Public methods and variables
 
-	    /**
-	     * Register a menu instance with its id.
-	     */
-	    registerMenu : function(id, menuContainerDiv) {
-		var menu = new Menu(menuContainerDiv);
-		menus.push({
-		    id : id, menu : menu
-		});
-		return menu;
-	    },
+            /**
+             * Register a menu instance with its id.
+             */
+            registerMenu: function (id, menuContainerDiv) {
+                var menu = new Menu(menuContainerDiv);
+                menus.push({
+                    id: id, menu: menu
+                });
+                return menu;
+            },
 
-	    /**
-	     * Select menu as active and return the instance
-	     */
-	    activateMenu : function(id) {
-		var result = null;
-		for (i = 0; i < menus.length; i++) {
-		    if (id == menus[i].id) {
-			openMenuHistory.push(menus[i]);
-			result = menus[i].menu;
-			break;
-		    }
-		}
-		return result;
-	    },
+            /**
+             * Select menu as active and return the instance
+             */
+            activateMenu: function (id) {
+                var result = null;
+                for (var i = 0; i < menus.length; i++) {
+                    if (id == menus[i].id) {
+                        openMenuHistory.push(menus[i]);
+                        result = menus[i].menu;
+                        break;
+                    }
+                }
+                return result;
+            },
 
-	    /**
-	     * Close active menu and return the one, which should be active
-	     */
-	    closeAcitveMenu : function() {
-		openMenuHistory.pop();
-		return getActiveMenu();
-	    },
-	    
-	    closeAllMenus : function() {
-		openMenuHistory.length = 0;
-	    },
+            /**
+             * Close active menu and return the one, which should be active
+             */
+            closeAcitveMenu: function () {
+                openMenuHistory.pop();
+                return getActiveMenu();
+            },
 
-	    executeMenuItemAction : function() {
-		return getActiveMenu().executeMenuItemAction();
-	    },
+            closeAllMenus: function () {
+                openMenuHistory.length = 0;
+            },
 
-	    selectNextItem : function() {
-		getActiveMenu().selectNextItem();
-	    },
+            executeMenuItemAction: function () {
+                return getActiveMenu().executeMenuItemAction();
+            },
 
-	    selectPreviousItem : function() {
-		getActiveMenu().selectPreviousItem();
-	    },
+            selectNextItem: function () {
+                getActiveMenu().selectNextItem();
+            },
 
-	    selectMenuItem : function(index) {
-		getActiveMenu().selectMenuItem(index);
-	    }
-	};
+            selectPreviousItem: function () {
+                getActiveMenu().selectPreviousItem();
+            },
+
+            selectMenuItem: function (index) {
+                getActiveMenu().selectMenuItem(index);
+            }
+        };
 
     };
 
     return {
 
-	// Get the Singleton instance if one exists
-	// or create one if it doesn't
-	getInstance : function() {
+        // Get the Singleton instance if one exists
+        // or create one if it doesn't
+        getInstance: function () {
 
-	    if (!instance) {
-		instance = init();
-	    }
+            if (!instance) {
+                instance = init();
+            }
 
-	    return instance;
-	}
+            return instance;
+        }
 
     };
 

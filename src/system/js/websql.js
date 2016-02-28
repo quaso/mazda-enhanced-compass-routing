@@ -14,6 +14,7 @@ var WebSql = (function () {
             db.transaction(function (tx) {
                 tx.executeSql("CREATE TABLE IF NOT EXISTS latlng (id INTEGER PRIMARY KEY, lat, lng)");
                 tx.executeSql("CREATE TABLE IF NOT EXISTS route (startId, destId, data)");
+                tx.executeSql("CREATE TABLE IF NOT EXISTS destination (latlngId INTEGER PRIMARY KEY, name)");
             });
             return db;
         };
@@ -72,6 +73,26 @@ var WebSql = (function () {
                 var db = prepareDatabase();
                 db.transaction(function (tx) {
                     tx.executeSql("DELETE FROM route", []);
+                });
+            },
+
+            insertDestinationToDb: function (lat, lng, name) {
+                var db = prepareDatabase();
+                db.transaction(function (tx) {
+                    findOrCreateLatLng(tx, lat, lng, function (latlngId) {
+                        tx.executeSql("INSERT INTO destination (latlngId, name) VALUES (?, ?)",
+                            [latlngId, name]);
+                    });
+                });
+            },
+
+            findAllDestinations: function (callback) {
+                var db = prepareDatabase();
+                db.transaction(function (tx) {
+                    tx.executeSql(
+                        "SELECT latlng.lat AS lat, latlng.lng AS lng, name AS name FROM destination INNER JOIN latlng ON destination.latlngId = latlng.id", [], function (tx, results) {
+                            callback(results);
+                        });
                 });
             },
         };

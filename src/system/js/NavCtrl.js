@@ -235,7 +235,7 @@ NavCtrl.prototype = {
         var files = ['system/js/ol.js', 'system/js/jquery-2.2.0.min.js', 'system/js/settings.js', 'system/js/menu.js',
             'system/js/menu_manager.js', 'system/js/turn_types.js', 'system/js/lat_lng.js', 'system/js/route.js',
             'system/js/graph_hopper.js', 'system/js/geo.js', 'system/js/navigation_info.js',
-            'system/js/navigation.js', 'system/js/offline_navigation.js', 'system/js/routesCache.js',
+            'system/js/navigation.js', 'system/js/offline_navigation.js', 'system/js/websql.js', 'system/js/routesCache.js',
             'routesCacheFile.js', 'system/js/destination_holder.js'];
         var toBeLoaded = files.length;
         function callbackInternal() {
